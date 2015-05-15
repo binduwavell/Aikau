@@ -17,7 +17,7 @@ Surf uses the Dojo framework for AMD module loading and Aikau widgets make use o
 The atomic nature of the widgets means that they are easily unit testable and Aikau makes use of the Intern JavaScript testing framework, driven by Grunt and uses Vagrant for multi-platform, cross-browser testing. It uses node-coverage to capture code coverage results of its unit tests.
 
 ## Learning Aikau
-We've written a tutorial that takes you through the process of building a standalone Aikau client. We're in the process of converting it into GitHub markdown files - the chapters that have been converted so far start [here](https://github.com/Alfresco/Aikau/blob/master/tutorial/chapters/About.md "Link to Tutorial").
+We've written a tutorial that takes you through the process of building a standalone Aikau client. We're in the process of converting it into GitHub markdown files - the chapters that have been converted so far start [here](tutorial/chapters/About.md "Link to Tutorial").
 
 There is also an [Alfresco Wiki page](https://wiki.alfresco.com/wiki/Aikau_framework "Link to Alfresco Wiki") that collates avaialble Aikau educational material.
 
