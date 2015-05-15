@@ -11,3 +11,13 @@ Click the button marked "Refresh Web Scripts" to reload the existing WebScripts 
 
 ### Production Mode
 When running in production mode it will be necessary to refresh your WebScripts if you make any changes to them in order to see the effect of those changes.
+
+### Automating Refresh
+It is possible to integrate the WebScript refreshing capability from the alfresco-maven-plugin. Following is a command you can run from the root of your project to refresh:
+
+```
+mvn org.alfresco.maven.plugin:alfresco-maven-plugin:2.1.0:refresh-share -Dmaven.alfresco.refresh.mode=share -Dmaven.alfresco.refresh.port=8090 -Dmaven.alfresco.refresh.username=admin -Dmaven.alfresco.refresh.password=admin -Dmaven.alfresco.refresh.shareUrl=/aikau-sample/page/index -Dmaven.alfresco.refresh.clearCacheShareUrl=/aikau-sample/page/caches/dependency/clear
+```
+
+Obviously this plugin:goal can be integrated into the pom so that ```mvn compile``` will automatically force a refresh.
+

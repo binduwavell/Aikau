@@ -28,3 +28,13 @@ In the `<PROJECT-HOME>/src/main/webapp/WEB-INF/surf.xml` you will find a section
 ```
 
 Change the value from `false` to `true` and after restarting the server Surf will clear its caches before serving every page request (effectively disabling them).
+
+### Automating Refresh
+It is possible to integrate the WebScript refreshing capability from the alfresco-maven-plugin this also allows for clearing dependency caches. Following is a command you can run from the root of your project to clear dependency caches:
+
+```
+mvn org.alfresco.maven.plugin:alfresco-maven-plugin:2.1.0:refresh-share -Dmaven.alfresco.refresh.mode=share -Dmaven.alfresco.refresh.port=8090 -Dmaven.alfresco.refresh.username=admin -Dmaven.alfresco.refresh.password=admin -Dmaven.alfresco.refresh.shareUrl=/aikau-sample/page/index -Dmaven.alfresco.refresh.clearCacheShareUrl=/aikau-sample/page/caches/dependency/clear
+```
+
+Obviously this plugin:goal can be integrated into the pom so that ```mvn compile``` will automatically force the dependency caches to be cleared.
+
