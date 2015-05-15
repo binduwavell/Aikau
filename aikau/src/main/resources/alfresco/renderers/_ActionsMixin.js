@@ -31,6 +31,7 @@
  */
 define(["dojo/_base/declare",
         "alfresco/core/Core",
+        "alfresco/core/CoreWidgetProcessing",
         "alfresco/documentlibrary/_AlfDocumentListTopicMixin",
         "alfresco/renderers/_PublishPayloadMixin",
         "alfresco/core/ObjectProcessingMixin",
@@ -40,10 +41,10 @@ define(["dojo/_base/declare",
         "service/constants/Default",
         "alfresco/core/ArrayUtils",
         "alfresco/core/JsNode"],
-        function(declare, AlfCore, _AlfDocumentListTopicMixin, _PublishPayloadMixin, ObjectProcessingMixin, 
+        function(declare, AlfCore, CoreWidgetProcessing, _AlfDocumentListTopicMixin, _PublishPayloadMixin, ObjectProcessingMixin, 
                  AlfMenuItem, array, lang, AlfConstants, AlfArray, JsNode) {
 
-   return declare([AlfCore, _AlfDocumentListTopicMixin, _PublishPayloadMixin, ObjectProcessingMixin], {
+   return declare([AlfCore, CoreWidgetProcessing, _AlfDocumentListTopicMixin, _PublishPayloadMixin, ObjectProcessingMixin], {
 
       /**
        * Indicates whether or not actions should be filtered according to the
@@ -100,6 +101,12 @@ define(["dojo/_base/declare",
          }
       },
 
+      widgetsForActions: [
+         {
+            name: "alfresco/renderers/actions/UploadNewVersion"
+         }
+      ],
+
 
       /**
        * Add the actions provided by the current item.
@@ -110,12 +117,41 @@ define(["dojo/_base/declare",
          // Iterate over the actions to create a menu item for each of them...
          if (this.customActions && this.customActions.length > 0)
          {
-            array.forEach(this.customActions, lang.hitch(this, "addAction"));
+            array.forEach(this.customActions, lang.hitch(this, this.addAction));
          }
          else if (this.currentItem.actions && this.currentItem.actions.length > 0)
          {
-            array.forEach(this.currentItem.actions, lang.hitch(this, "addAction"));
+            array.forEach(this.currentItem.actions, lang.hitch(this, this.addAction));
          }
+         else if (this.widgetsForActions)
+         {
+            // Provide default actions based on sensible defaults evaluated based on the 
+            // current item to be actioned...
+
+            // TODO: We probably want to avoid rendering all the actions until the menu is opened...
+            var actions = [];
+            array.forEach(this.widgetsForActions, function(action) {
+               if (action && action.name)
+               {
+                  require([action.name], function(config) {
+                     if (config)
+                     {
+                        actions.push({
+                           name: "alfresco/menus/AlfMenuItem",
+                           config: config
+                        });
+                     }
+                  });
+               }
+            }, this);
+            this.processWidgets(actions);
+         }
+      },
+
+      allWidgetsProcessed: function alfresco_renderers__ActionsMixin__allWidgetsProcessed(widgets) {
+         array.forEach(widgets, function(widget) {
+            this.actionsGroup.addChild(widget);
+         }, this);
       },
 
       /**

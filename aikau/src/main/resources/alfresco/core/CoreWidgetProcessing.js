@@ -569,44 +569,112 @@ define(["dojo/_base/declare",
        * @returns {boolean} The result of the filter evaluation or true if no "renderFilter" is provided
        */
       filterWidget: function alfresco_core_CoreWidgetProcessing__filterWidget(widgetConfig, index, decrementCounter) {
-         var shouldRender = true;
-         if (widgetConfig.config && widgetConfig.config.renderFilter)
-         {
-            // If filter configuration is provided, then switch the default so that rendering will NOT occur...
-            // shouldRender = false;
-
-            // Check that the object has a the supplied property...
-            var renderFilterConfig = widgetConfig.config.renderFilter;
-            if (!ObjectTypeUtils.isArray(renderFilterConfig))
-            {
-               this.alfLog("warn", "A request was made to filter a widget, but the filter configuration was not an array", this, widgetConfig);
-               shouldRender = true;
-            }
-            else
-            {
-               // Check that the widget passes all the filter checks...
-               var renderFilterMethod = lang.getObject("config.renderFilterMethod", false, widgetConfig);
-               if (!renderFilterMethod || lang.trim(renderFilterMethod) === "ALL")
-               {
-                  // Handle AND logic (all filters must pass)
-                  shouldRender = array.every(renderFilterConfig, lang.hitch(this, this.processFilterConfig));
-               }
-               else
-               {
-                  // Handle OR logic (only one filter needs to pass)
-                  shouldRender = array.some(renderFilterConfig, lang.hitch(this, this.processFilterConfig));
-               }
-            }
-         }
-         else
-         {
-            // this.alfLog("log", "A request was made to filter a widget but the configuration does not have a 'config.renderFilter' attribute.", this, widgetConfig);
-         }
+         var shouldRender = this.processAllFilters(widgetConfig.config);
+         // if (widgetConfig.config && widgetConfig.config.renderFilters)
+         // {
+         //    // If "renderFilters" (e.g. more than one "renderFilter" - see following else/if block)
+         //    var renderFiltersConfig = widgetConfig.config.renderFilters;
+         //    var renderFiltersMethod = lang.getObject("config.renderFilterMethod", false, widgetConfig);
+         //    shouldRender = this.processMultipleFilters(renderFiltersConfig, renderFiltersMethod);
+         // }
+         // else if (widgetConfig.config && widgetConfig.config.renderFilter)
+         // {
+         //    // If filter configuration is provided, then switch the default so that rendering will NOT occur...
+         //    // Check that the object has a the supplied property...
+         //    var renderFilterConfig = widgetConfig.config.renderFilter;
+         //    var renderFilterMethod = lang.getObject("config.renderFilterMethod", false, widgetConfig);
+         //    shouldRender = this.processSingleFilter(renderFilterConfig, renderFilterMethod);
+         // }
+         // else
+         // {
+         //    // this.alfLog("log", "A request was made to filter a widget but the configuration does not have a 'config.renderFilter' attribute.", this, widgetConfig);
+         // }
          if (!shouldRender && decrementCounter !== false)
          {
             // It is not always necessary to call the _registerProcessedWidget. This is relevant for widgets
             // that work through an entire model before performing any processing (e.g. alfresco/core/FilteredPage)
             this._registerProcessedWidget(null, index);
+         }
+         return shouldRender;
+      },
+
+      processAllFilters: function alfresco_core_CoreWidgetProcessing__processAllFilters(filterConfig) {
+         var shouldRender = true;
+         if (filterConfig && filterConfig.renderFilters)
+         {
+            // If "renderFilters" (e.g. more than one "renderFilter" - see following else/if block)
+            var renderFiltersConfig = filterConfig.renderFilters;
+            var renderFiltersMethod = lang.getObject("renderFilterMethod", false, filterConfig);
+            shouldRender = this.processMultipleFilters(renderFiltersConfig, renderFiltersMethod);
+         }
+         else if (filterConfig && filterConfig.renderFilter)
+         {
+            // If filter configuration is provided, then switch the default so that rendering will NOT occur...
+            // Check that the object has a the supplied property...
+            var renderFilterConfig = filterConfig.renderFilter;
+            var renderFilterMethod = lang.getObject("renderFilterMethod", false, filterConfig);
+            shouldRender = this.processSingleFilter(renderFilterConfig, renderFilterMethod);
+         }
+         return shouldRender;
+      },
+
+      /**
+       * [processMultipleFilters description]
+       * @param  {[type]} renderFiltersConfig [description]
+       * @param  {[type]} renderFilterMethod  [description]
+       * @return {[type]}                     [description]
+       */
+      processMultipleFilters: function alfresco_core_CoreWidgetProcessing__processMultipleFilters(renderFiltersConfig, renderFilterMethod) {
+         var shouldRender = true;
+         if (!ObjectTypeUtils.isArray(renderFiltersConfig))
+         {
+            // Invalid configuration counts as being allowed to render...
+            this.alfLog("warn", "A request was made to filter a widget, but the 'renderFilters' configuration was not an array", this, renderFiltersConfig, renderFilterMethod);
+            shouldRender = true;
+         }
+         else
+         {
+            // Check that the widget passes all the filter checks...
+            if (!renderFilterMethod || lang.trim(renderFilterMethod) === "ALL")
+            {
+               // Handle AND logic (all filters must pass)
+               shouldRender = array.every(renderFiltersConfig, lang.hitch(this, this.processAllFilters));
+            }
+            else
+            {
+               // Handle OR logic (only one filter needs to pass)
+               shouldRender = array.some(renderFiltersConfig, lang.hitch(this, this.processAllFilters));
+            }
+         }
+         return shouldRender;
+      },
+
+      /**
+       * [processSingleFilter description]
+       * @param  {[type]} renderFilterMethod [description]
+       * @param  {[type]} renderFilterConfig [description]
+       * @return {[type]}                    [description]
+       */
+      processSingleFilter: function alfresco_core_CoreWidgetProcessing__processSingleFilter(renderFilterConfig, renderFilterMethod) {
+         var shouldRender = true;
+         if (!ObjectTypeUtils.isArray(renderFilterConfig))
+         {
+            this.alfLog("warn", "A request was made to filter a widget, but the 'renderFilter' configuration was not an array", this, renderFilterConfig, renderFilterMethod);
+            shouldRender = true;
+         }
+         else
+         {
+            // Check that the widget passes all the filter checks...
+            if (!renderFilterMethod || lang.trim(renderFilterMethod) === "ALL")
+            {
+               // Handle AND logic (all filters must pass)
+               shouldRender = array.every(renderFilterConfig, lang.hitch(this, this.processFilterConfig));
+            }
+            else
+            {
+               // Handle OR logic (only one filter needs to pass)
+               shouldRender = array.some(renderFilterConfig, lang.hitch(this, this.processFilterConfig));
+            }
          }
          return shouldRender;
       },
