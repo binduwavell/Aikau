@@ -4,6 +4,8 @@ Next: [How to Create a new Widget](./Tutorial2.md)
 ## Tutorial 1 - Getting Started
 If you're already familiar with what Aikau is then you're probably here for an in-depth tutorial on how to use it – but for those who aren't this tutorial should serve as an example of how fast it can be to develop a new client that accesses data from an [Alfresco](http://www.alfresco.com/ "Link to Alfresco home page") repository.
 
+<!-- Previous para might need a bit of word-smithing. Is it saying this contains an in-depth tutorial or that it only serves as an example of how fast it can be to develop... ? -->
+
 In this tutorial we're going to create a very simple application that allows a user to login and access their personal home folder in the Repository.
 
 The only thing required to complete the tutorial is an installed and operational instance of Alfresco. If you don't have Alfresco installed then you can download and install it from [here](http://www.alfresco.com/products/community "Alfresco Community Download Page"). It’s recommended that you download and install a new version of Alfresco Community because you’ll need administrator privileges to work through the entire tutorial.
@@ -42,6 +44,8 @@ Make sure you have an Alfresco Repository up and running, then start your new ap
 mvn jetty:run
 ```
 
+<!-- What about including a run.sh in the archetype like exists in the Alfresck SDK 2.x? -->
+
 ...from a command line. After a small pause (don’t worry while this happens, it is busy!) the Jetty server will have started, when you see the line:
 
 > [INFO] Started Jetty Server
@@ -62,6 +66,8 @@ At the moment it’s quite empty, containing nothing more than a header and foot
 Currently the home page of your client has very little displayed on it. We're going to update this page by adding in the widgets and services that will render the contents of the user’s home folder.
 
 To do this we need to add a DocumentList widget onto the page along with a view to render the contents of the list and the services required to retrieve the documents and folders to display.
+
+<!-- Does it make sense to either have a Tutorial0.md that explains a bit more about widgets: lists and views in addition to services. Feels a bit like jumping in the deep end. Other places in this document you indicate we'll cover stuff later. If this will be covered later maybe a comment to that effect would be helpful. -->
 
 Open the JavaScript controller file for the home page (`“<PROJECT>/src/main/webapp/WEB-INF/webscripts/pages/home.get.js”`) and find the comment:
 
