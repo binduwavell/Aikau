@@ -6,7 +6,7 @@ If you're already familiar with what Aikau is then you're probably here for an i
 
 In this tutorial we're going to create a very simple application that allows a user to login and access their personal home folder in the Repository.
 
-The only thing required to complete the tutorial is an installed and operational instance of Alfresco. If you don't have Alfresco installed then you can download and install it from [here](http://www.alfresco.com/products/community "Alfresco Community Download Page"). It’s recommended that you download and install a new version of Alfresco Community because you’ll need administrator privileges to work through the entire tutorial.
+The only things required to complete the tutorial are an installed and operational instance of Alfresco and a recent version of [Maven](http://maven.apache.org/download.cgi). If you don't have Alfresco installed then you can download and install it from [here](http://www.alfresco.com/products/community "Alfresco Community Download Page"). It’s recommended that you download and install a new version of Alfresco Community because you’ll need administrator privileges to work through the entire tutorial.
 
 **NOTE: If you wish to use an Alfresco Repository that is not locally hosted then you should follow the instructions described [here](./UsingRemoteRepository.md "Link to instructions for configuring a remote Alfresco Repository") to update the default client configuration.**
 
@@ -52,7 +52,7 @@ mvn jetty:run
 
 You will automatically be re-directed to the default login page at which you can enter the credentials of a valid user of your Alfresco repository and you will be taken to the default home page.
 
-**NOTE: There’s nothing particularly special about port 8090, it’s simply been selected in order to avoid conflicting with other ports that might in use (e.g. the Alfresco Repository). It can easily be changed by editing the pom.xml file of the Maven project.**
+**NOTE: There’s nothing particularly special about port 8090, it’s simply been selected in order to avoid conflicting with other ports that might be in use (e.g. the Alfresco Repository). It can easily be changed by editing the pom.xml file of the Maven project.**
 
 At the moment it’s quite empty, containing nothing more than a header and footer with a big empty space in the middle which we’re going to fill.
 
@@ -63,7 +63,7 @@ At the moment it’s quite empty, containing nothing more than a header and foot
 ### Step 3. Show the user files
 Currently the home page of your client has very little displayed on it. We're going to update this page by adding in the widgets and services that will render the contents of the user’s home folder.
 
-To do this we need to add a DocumentList widget onto the page along with a view to render the contents of the list and the services required to retrieve the documents and folders to display.
+To do this we need to add a [DocumentList](http://dev.alfresco.com/resource/docs/aikau-jsdoc/AlfDocumentList.html) widget onto the page along with a [view](http://dev.alfresco.com/resource/docs/aikau-jsdoc/AlfSimpleView.html) to render the contents of the list and the [services](http://dev.alfresco.com/resource/docs/aikau-jsdoc/DocumentService.html) required to retrieve the documents and folders to display.
 
 Open the JavaScript controller file for the home page (`“<PROJECT>/src/main/webapp/WEB-INF/webscripts/pages/home.get.js”`) and find the comment:
 
@@ -115,9 +115,9 @@ We’ll explore services in more detail in later tutorials (in fact you’ll be 
 You can now browse around the files but you won't be able to view an individual file yet (because the default document link is for an Alfresco Share specific page that does not exist in your application). Nor will you be able to do anything with the files (such as delete them) because the actions haven’t yet been configured yet. We’ll get to these in a later tutorials.
 
 ### Step 4. Improve Navigation
-Although you can navigate into folders it’s not currently possible to navigate back out of them. There are lots of different ways in which we can address this (e.g. breadcrumb trails, navigation trees, etc) but as a simple solution we’ll add a button to navigate back to the parent of the current folder.
+Although you can navigate into folders it’s not currently possible to navigate back out of them. There are lots of different ways in which we can address this (e.g. breadcrumb trails, navigation trees, etc) but as a simple solution we’ll add a [button](http://dev.alfresco.com/resource/docs/aikau-jsdoc/AlfButton.html) to navigate back to the parent of the current folder.
 
-Add this to the model in the JavaScript controller directly above the `“alfresco/documentlibrary/AlfDocumentList”` entry you added earlier.
+Add this to the model in the JavaScript controller directly above the `"alfresco/documentlibrary/AlfDocumentList"` entry you added earlier.
 
 ```
 {
